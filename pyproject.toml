@@ -31,3 +31,8 @@ dependencies = [
     "typing-inspection==0.4.2",
     "uvicorn==0.38.0",
 ]
+
+[dependency-groups]
+dev = [
+    "black>=25.12.0",
+]
