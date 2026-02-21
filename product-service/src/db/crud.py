@@ -22,3 +22,14 @@ async def add_product(
     await session.commit()
     return product
 
+async def get_product(
+        session: AsyncSession,
+        id: id
+) -> Product | None:
+    stmt = select(Product).filter(Product.id == id)
+    result = await session.scalars(stmt)
+    return result.first()
+
+
+
+
