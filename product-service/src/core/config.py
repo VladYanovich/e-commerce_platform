@@ -14,7 +14,7 @@ class ApiV1Prefix(BaseModel):
     products: str = "/products"
 
 class ApiPrefix(BaseModel):
-    prefix: str = "/products"
+    prefix: str = "/api"
     v1: ApiV1Prefix = ApiV1Prefix()
 
 class DatabaseConfig(BaseModel):
