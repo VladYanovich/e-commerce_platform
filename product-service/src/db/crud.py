@@ -24,12 +24,35 @@ async def add_product(
 
 async def get_product(
         session: AsyncSession,
-        id: id
+        id: int
 ) -> Product | None:
     stmt = select(Product).filter(Product.id == id)
     result = await session.scalars(stmt)
     return result.first()
 
+async def update_product(
+        session: AsyncSession,
+        id: int,
+        updated_product: ProductCreate
+) -> Product | None:
+    product = await session.get(Product, id)
+    if product is None:
+        return None
+    for key, value in updated_product.model_dump().items():
+        setattr(product, key, value)
+    await session.commit()
+    await session.refresh(product)
+    return product
 
+async def delete_product(
+        session: AsyncSession,
+        id: int
+) -> Product | None:
+    product = await session.get(Product, id)
+    if product is None:
+        return None
+    await session.delete(product)
+    await session.commit()
+    return product
 
 
