@@ -5,13 +5,16 @@ from fastapi import FastAPI
 from src.core.config import settings
 from src.api.api_v1 import router as api_v1_router
 from src.db.db_helper import db_helper
+from src.rabbitmq import broker
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup
+    await broker.start()
     yield
     # shutdown
+    await broker.close()
     await db_helper.dispose()
 
 app = FastAPI(
