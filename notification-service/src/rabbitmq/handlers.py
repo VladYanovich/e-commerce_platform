@@ -17,7 +17,7 @@ product_queue = RabbitQueue(
 )
 
 
-@broker.subscriber(queue=product_queue)
+@broker.subscriber(queue=product_queue, exchange=product_exchange)
 async def handle_products(data: dict):
     event = data.get("event", "unknown")
     product = data.get("product", {})
