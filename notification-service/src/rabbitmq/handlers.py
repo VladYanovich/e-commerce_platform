@@ -1,8 +1,10 @@
 from faststream.rabbit import RabbitExchange, RabbitQueue, ExchangeType
 
+from src.schemas import ProductCreate
 from src.bot import bot
 from src.config import settings
 from src.rabbitmq.broker import broker
+from src.enums import NotificationQueue
 
 product_exchange = RabbitExchange(
     "product_events",
@@ -11,22 +13,21 @@ product_exchange = RabbitExchange(
 )
 
 product_queue = RabbitQueue(
-    "notification_product_created",
+    NotificationQueue.product_created.value,
     durable=True,
     routing_key="product.created",
 )
 
 
-@broker.subscriber(queue=product_queue)
-async def handle_products(data: dict):
-    event = data.get("event", "unknown")
-    product = data.get("product", {})
+@broker.subscriber(queue=product_queue, exchange=product_exchange)
+async def handle_products(product: dict):
+    product = ProductCreate(**product)
 
     text = (
-        f"🔔 {event}\n\n"
-        f"📦 {product.get('name')}\n"
-        f"💰 {product.get('price')} {product.get('currency')}\n"
-        f"📝 {product.get('description')}"
+        f"🔔 {product.event}\n\n"
+        f"📦 {product.product.name}\n"
+        f"💰 {product.product.price} {product.product.currency}\n"
+        f"📝 {product.product.description}"
     )
 
     await bot.send_message(
