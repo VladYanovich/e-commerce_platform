@@ -25,7 +25,7 @@ class DatabaseConfig(BaseModel):
     max_overflow: int = 10
 
 class RabbitMQConfig(BaseModel):
-    host: str = "localhost"
+    host: str = "rabbitmq"
     port: int = 5672
     user: str = "guest"
     password: str = "guest"

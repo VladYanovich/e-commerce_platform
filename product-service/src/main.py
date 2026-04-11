@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -11,6 +12,7 @@ from src.rabbitmq import broker
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup
+    await asyncio.sleep(5)
     await broker.start()
     yield
     # shutdown
@@ -30,6 +32,5 @@ if __name__ == "__main__":
     uvicorn.run(
             "src.main:app",
                 host = settings.run.host,
-                port = settings.run.port,
-                reload=True)
+                port = settings.run.port)
 
