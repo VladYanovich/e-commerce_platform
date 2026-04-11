@@ -11,7 +11,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: product_service
-
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:4.2.4-management
@@ -19,3 +20,24 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  notification-service:
+    env_file:
+      - notification-service/.env
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+
+  product-service:
+    env_file:
+      - product-service/.env
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+
+volumes:
+  postgres_data:

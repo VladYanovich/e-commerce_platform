@@ -13,15 +13,14 @@ product_exchange = RabbitExchange(
 )
 
 product_queue = RabbitQueue(
-    NotificationQueue.product_created.value,
+    NotificationQueue.PRODUCT_CREATED.value,
     durable=True,
     routing_key="product.created",
 )
 
 
 @broker.subscriber(queue=product_queue, exchange=product_exchange)
-async def handle_products(product: dict):
-    product = ProductCreate(**product)
+async def handle_products(product: ProductCreate):
 
     text = (
         f"🔔 {product.event}\n\n"
