@@ -6,12 +6,14 @@ from src.db.schemas.products import ProductRead, ProductCreate
 from src.rabbitmq import product_created_publisher
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
+from src.redis.redis_cache import redis_cache
 
 router = APIRouter(
     tags=["products"]
 )
 
 @router.get("/", response_model=list[ProductRead])
+@redis_cache()
 async def get_products(
         session: AsyncSession = Depends(db_helper.session_getter)
 ):
