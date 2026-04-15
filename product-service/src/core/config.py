@@ -24,6 +24,11 @@ class DatabaseConfig(BaseModel):
     pool_size: int = 50
     max_overflow: int = 10
 
+class RedisConfig(BaseModel):
+    host: str = "redis"
+    port: int = 6379
+    decode_responses: bool = True
+
 class RabbitMQConfig(BaseModel):
     host: str = "rabbitmq"
     port: int = 5672
@@ -47,5 +52,6 @@ class Settings(BaseSettings):
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
+    redis: RedisConfig = RedisConfig()
 
 settings = Settings()
